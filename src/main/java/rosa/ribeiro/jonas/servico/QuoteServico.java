@@ -2,6 +2,7 @@ package rosa.ribeiro.jonas.servico;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import rosa.ribeiro.jonas.dto.QuoteDto;
+import rosa.ribeiro.jonas.persistence.QuoteRepository;
 
 import java.io.IOException;
 import java.net.URI;
@@ -19,6 +20,7 @@ public class QuoteServico {
     private final ObjectMapper objectMapper;
 
 
+
     public QuoteServico(String apiKey) {
         this.apiKey = apiKey;
         this.client = HttpClient.newHttpClient();
@@ -28,7 +30,6 @@ public class QuoteServico {
     public List<QuoteDto> fetchRandomQuotes() throws Exception {
         HttpResponse<String> httpResponse;
         try {
-
             HttpRequest request = HttpRequest.newBuilder()
                     .uri(new URI(API_URL))
                     .GET()
@@ -42,7 +43,6 @@ public class QuoteServico {
                 System.err.println(errorMessage);
                 throw new RuntimeException(errorMessage);
             }
-
         } catch (RuntimeException | InterruptedException | IOException | URISyntaxException e) {
             throw new Exception(e);
         }
