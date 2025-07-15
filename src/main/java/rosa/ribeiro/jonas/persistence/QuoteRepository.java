@@ -5,6 +5,7 @@ import rosa.ribeiro.jonas.dto.QuoteDto;
 import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
+import java.nio.file.StandardOpenOption;
 import java.util.List;
 
 public class QuoteRepository {
@@ -19,9 +20,9 @@ public class QuoteRepository {
                 quoteDto.get(0).getQuote() +
                 ", " +
                 "Author: " +
-                quoteDto.get(0).getAuthor() +
+                quoteDto.get(0).getAuthor() +", " +
                 "Category: " +
-                quoteDto.get(0).getCategory();
+                quoteDto.get(0).getCategory()+"\n";
 
     }
     public void CreateFileTxt() throws IOException {
@@ -32,7 +33,7 @@ public class QuoteRepository {
         if(Files.notExists(path)){
             Files.createFile(path);
         }
-        Files.writeString(path,CreateString(quoteDto));
+        Files.writeString(path,CreateString(quoteDto), StandardOpenOption.CREATE, StandardOpenOption.APPEND);
 
     }
 

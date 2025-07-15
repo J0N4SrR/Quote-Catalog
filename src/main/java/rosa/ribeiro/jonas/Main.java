@@ -5,7 +5,6 @@ import rosa.ribeiro.jonas.dto.QuoteDto;
 import rosa.ribeiro.jonas.persistence.QuoteRepository;
 import rosa.ribeiro.jonas.servico.QuoteServico;
 
-import java.util.Arrays;
 import java.util.List;
 
 public class Main {
