@@ -13,7 +13,7 @@ public class Main {
         QuoteServico quoteServico = new QuoteServico(apiKey);
         List<QuoteDto> quotes = quoteServico.fetchRandomQuotes();
         QuoteRepository quoteRepository = new QuoteRepository();
-        quoteRepository.saveQuoteTxt(quotes);
+        quoteRepository.saveQuotes(quotes);
         System.out.println(quotes);
     }
 }

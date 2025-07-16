@@ -2,14 +2,14 @@ package rosa.ribeiro.jonas.persistence;
 
 import rosa.ribeiro.jonas.dto.QuoteDto;
 
-import java.io.IOException;
+import java.io.*;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.StandardOpenOption;
 import java.util.List;
 
 public class QuoteRepository {
-    String REPO_URL = "src/repository/";
+    private static final String REPO_URL = "src/repository/";
 
     public QuoteRepository() {
         try{
@@ -20,25 +20,22 @@ public class QuoteRepository {
         }
     }
 
-    public String createString(List<QuoteDto> quoteDto){
+    private String formatQuote(QuoteDto quoteDto){
         return "Quote: " +
-                quoteDto.get(0).getQuote() +
+                quoteDto.getQuote() +
                 ", " +
                 "Author: " +
-                quoteDto.get(0).getAuthor() +", " +
+                quoteDto.getAuthor() +", " +
                 "Category: " +
-                quoteDto.get(0).getCategory()+"\n";
+                quoteDto.getCategory()+"\n";
     }
 
     public boolean fileExists(Path path){
         return Files.exists(path);
     }
 
-    private Path createPath(List<QuoteDto> quoteDto){
-        return Path.of(REPO_URL + quoteDto.get(0).getCategory() + ".txt");
-    }
-
-    private Path createPath(String category){
+    private Path createPath(String c){
+        String category = c.toLowerCase();
         return Path.of(REPO_URL + category + ".txt");
     }
 
@@ -46,8 +43,15 @@ public class QuoteRepository {
         Files.writeString(path, txt, StandardOpenOption.CREATE, StandardOpenOption.APPEND);
     }
 
-    public void saveQuoteTxt(List<QuoteDto> quoteDto) throws IOException {
-        createFile(createPath(quoteDto),createString(quoteDto));
+    public void saveQuotes(List<QuoteDto> quoteDto) throws IOException {
+        if(quoteDto == null || quoteDto.isEmpty()){
+            System.out.println("Não há citações para salvar!");
+            return;
+        }
+        for (QuoteDto quote : quoteDto){
+            createFile(createPath(quote.getCategory()), formatQuote(quote));
+        }
+
     }
 
     public List<String> readFileByCategory(String c) throws IOException {
@@ -59,8 +63,30 @@ public class QuoteRepository {
         return List.of();
     }
 
-
-
-
-
+    public List<String> findQuotesByAuthor(String a) throws IOException {
+        String author = a.toLowerCase();
+        List<String> authorList = new java.util.ArrayList<>();
+        File dir = new File(REPO_URL);
+        File[] files = dir.listFiles();
+        if(files != null){
+            for(File d : files){
+                 try(FileReader fr = new FileReader(d);
+                     BufferedReader br = new BufferedReader(fr)){
+                         String linha;
+                         while((linha = br.readLine()) != null){
+                             String linhaLower = linha.toLowerCase();
+                             String[] linhaSplit = linhaLower.split(", ");
+                             if(linhaSplit.length > 1){
+                                 if(linhaSplit[1].contains(author)){
+                                  authorList.add(linha);
+                                 }
+                             }
+                         }
+                 } catch (Exception e) {
+                     throw new RuntimeException(e);
+                 }
+            }
+        }
+        return authorList;
+    }
 }
