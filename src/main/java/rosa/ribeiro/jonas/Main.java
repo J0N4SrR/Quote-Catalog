@@ -12,8 +12,8 @@ public class Main {
         String apiKey = ConfigLoader.getApiKey();
         QuoteServico quoteServico = new QuoteServico(apiKey);
         List<QuoteDto> quotes = quoteServico.fetchRandomQuotes();
-        QuoteRepository quoteRepository = new QuoteRepository(quotes);
-        quoteRepository.CreateFileTxt();
+        QuoteRepository quoteRepository = new QuoteRepository();
+        quoteRepository.saveQuoteTxt(quotes);
         System.out.println(quotes);
     }
 }
