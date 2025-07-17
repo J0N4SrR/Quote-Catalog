@@ -48,9 +48,33 @@ public class QuoteRepository {
             System.out.println("Não há citações para salvar!");
             return;
         }
-        for (QuoteDto quote : quoteDto){
-            createFile(createPath(quote.getCategory()), formatQuote(quote));
+        int cont = 0;
+        File dir = new File(REPO_URL);
+        File[] files = dir.listFiles();
+        if(files != null){
+            for(File d : files){
+                try(FileReader fr = new FileReader(d);
+                    BufferedReader br = new BufferedReader(fr)){
+                    String linha;
+                    while((linha = br.readLine()) != null){
+                        for (QuoteDto quote : quoteDto){
+                            if(linha.equalsIgnoreCase(formatQuote(quote))){
+                            cont++;
+                            }
+                        }
+
+                    }
+                    if(cont == 0){
+                        for (QuoteDto quote : quoteDto){
+                            createFile(createPath(quote.getCategory()), formatQuote(quote));
+                        }
+                    }
+                }
+            }
         }
+
+
+
 
     }
 
@@ -59,7 +83,7 @@ public class QuoteRepository {
         if(fileExists(createPath(category))){
            return Files.readAllLines(createPath(category));
         }
-        System.out.println("Categoria: " + category + "' não encontrada.");
+        System.out.println("Categoria: " + category + " não encontrada.");
         return List.of();
     }
 
