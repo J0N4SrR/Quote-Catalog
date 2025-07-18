@@ -43,11 +43,7 @@ public class QuoteRepository {
         Files.writeString(path, txt, StandardOpenOption.CREATE, StandardOpenOption.APPEND);
     }
 
-    public void saveQuotes(List<QuoteDto> quoteDto) throws IOException {
-        if(quoteDto == null || quoteDto.isEmpty()){
-            System.out.println("Não há citações para salvar!");
-            return;
-        }
+    public boolean quoteExists(List<QuoteDto> quoteDto){
         int cont = 0;
         File dir = new File(REPO_URL);
         File[] files = dir.listFiles();
@@ -59,23 +55,28 @@ public class QuoteRepository {
                     while((linha = br.readLine()) != null){
                         for (QuoteDto quote : quoteDto){
                             if(linha.equalsIgnoreCase(formatQuote(quote))){
-                            cont++;
+                                cont++;
                             }
                         }
-
                     }
-                    if(cont == 0){
-                        for (QuoteDto quote : quoteDto){
-                            createFile(createPath(quote.getCategory()), formatQuote(quote));
-                        }
-                    }
+                } catch (IOException e) {
+                    throw new RuntimeException(e);
                 }
             }
         }
+        return cont > 0;
+    }
 
-
-
-
+    public void saveQuotes(List<QuoteDto> quoteDto) throws IOException {
+        if(quoteDto == null || quoteDto.isEmpty()){
+            System.out.println("Não há citações para salvar!");
+            return;
+        }
+        if(!quoteExists(quoteDto)){
+            for (QuoteDto quote : quoteDto){
+                createFile(createPath(quote.getCategory()), formatQuote(quote));
+            }
+        }
     }
 
     public List<String> readFileByCategory(String c) throws IOException {

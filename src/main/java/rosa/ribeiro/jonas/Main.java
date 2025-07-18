@@ -11,9 +11,12 @@ public class Main {
     public static void main(String[] args) throws Exception {
         String apiKey = ConfigLoader.getApiKey();
         QuoteServico quoteServico = new QuoteServico(apiKey);
-        List<QuoteDto> quotes = quoteServico.fetchRandomQuotes();
         QuoteRepository quoteRepository = new QuoteRepository();
-        quoteRepository.saveQuotes(quotes);
-        System.out.println(quotes);
+//        for(int i = 0; i < 10; i++){
+//            List<QuoteDto> quotes = quoteServico.fetchRandomQuotes();
+//            quoteRepository.saveQuotes(quotes);
+//            System.out.println(quotes);
+//        }
+        System.out.println(quoteRepository.readFileByCategory("family"));
     }
 }

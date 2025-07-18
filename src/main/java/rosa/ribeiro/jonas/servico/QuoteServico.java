@@ -2,7 +2,6 @@ package rosa.ribeiro.jonas.servico;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import rosa.ribeiro.jonas.dto.QuoteDto;
-import rosa.ribeiro.jonas.persistence.QuoteRepository;
 
 import java.io.IOException;
 import java.net.URI;
